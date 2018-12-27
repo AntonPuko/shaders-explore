@@ -69,26 +69,50 @@ subscriptions _ =
 
 
 view : Model -> Browser.Document Msg
-view { time } =
+view model =
     { title = "Shaders Explore"
     , body =
-        [ div [] [ text "time: ", text (String.fromFloat (time / 1000)) ]
-        , WebGL.toHtml
-            [ width 500
-            , height 500
-            , style "display" "block"
+        [ div []
+            [ text "time: "
+            , text (String.fromFloat (model.time / 1000))
             ]
-            [ WebGL.entity
-                vertexShader
-                fragmentShader
-                mesh
-                { iResolution = vec3 (toFloat 500) (toFloat 500) 0
-                , iGlobalTime = time / 1000
-                , iMouse = vec4 (toFloat 0) (toFloat 0) 0 0
-                }
+        , div [ style "display" "flex" ]
+            [ viewShaderCard model (Size 400 400)
             ]
         ]
     }
+
+
+type alias Size =
+    { width : Int
+    , height : Int
+    }
+
+
+viewShaderCard : Model -> Size -> Html Msg
+viewShaderCard model size =
+    div
+        [ style "border-radius" "10px"
+        , style "overflow" "hidden"
+        ]
+        [ viewShader model size ]
+
+
+viewShader : Model -> Size -> Html Msg
+viewShader model size =
+    WebGL.toHtml
+        [ width size.width
+        , height size.height
+        , style "display" "block"
+        ]
+        [ WebGL.entity
+            vertexShader
+            fragmentShader
+            mesh
+            { iResolution = vec3 (toFloat size.width) (toFloat size.height) 0
+            , iGlobalTime = model.time / 1000
+            }
+        ]
 
 
 type alias Vertex =
@@ -113,7 +137,6 @@ mesh =
 type alias Uniforms =
     { iResolution : Vec3
     , iGlobalTime : Float
-    , iMouse : Vec4
     }
 
 
@@ -138,7 +161,7 @@ fragmentShader =
         varying vec2      vFragCoord;
         uniform vec3      iResolution;
         uniform float     iGlobalTime;
-        uniform vec4      iMouse;
+
         void mainImage( out vec4 fragColor, in vec2 fragCoord) {
             vec2 uv = fragCoord.xy / iResolution.xy;
             float aspectRatio = iResolution.x / iResolution.y;
