@@ -1,4 +1,4 @@
-module Main exposing (Model, Msg(..), init, main, subscriptions, update, view, viewLink)
+module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import Browser
 import Browser.Navigation as Nav
@@ -81,19 +81,21 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "Shaders Explore"
     , body =
-        [ text "The current URL is: "
+        [ viewHeader
+        , viewTitle "Shaders Explore"
+        , text "The current URL is: "
         , b [] [ text (Url.toString model.url) ]
-        , ul []
-            [ viewLink "/home"
-            , viewLink "/profile"
-            , viewLink "/reviews/the-century-of-the-self"
-            , viewLink "/reviews/public-opinion"
-            , viewLink "/reviews/shah-of-shahs"
-            ]
         ]
     }
 
 
-viewLink : String -> Html msg
-viewLink path =
-    li [] [ a [ href path ] [ text path ] ]
+viewHeader : Html msg
+viewHeader =
+    div [ class "header" ]
+        [ text "hello"
+        ]
+
+
+viewTitle : String -> Html msg
+viewTitle title =
+    h1 [ class "title" ] [ text title ]
