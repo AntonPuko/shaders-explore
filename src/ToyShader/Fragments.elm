@@ -1,13 +1,14 @@
 module ToyShader.Fragments exposing (circle, helloWorld)
 
 import Math.Vector2 as Vec2 exposing (Vec2)
-import ToyShader exposing (ToyFragmentShader)
+import ToyShader exposing (ToyFragment)
 import WebGL exposing (Shader)
 
 
-helloWorld : ToyFragmentShader
+helloWorld : ToyFragment
 helloWorld =
-    [glsl|
+    ToyFragment "hello World"
+        [glsl|
         precision mediump float;
         varying vec2      vFragCoord;
         uniform vec3      iResolution;
@@ -30,9 +31,10 @@ helloWorld =
     |]
 
 
-circle : ToyFragmentShader
+circle : ToyFragment
 circle =
-    [glsl|
+    ToyFragment "Circle"
+        [glsl|
         precision mediump float;
         varying vec2      vFragCoord;
         uniform vec3      iResolution;

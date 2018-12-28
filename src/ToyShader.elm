@@ -1,4 +1,4 @@
-module ToyShader exposing (Size, ToyFragmentShader, ToyUniforms, viewToyShaderCardPreview)
+module ToyShader exposing (Size, ToyFragment, ToyFragmentShader, ToyUniforms, viewToyShaderCardPreview)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -12,10 +12,6 @@ import WebGL exposing (Mesh, Shader)
 type alias Vertex =
     { position : Vec3
     }
-
-
-
--- todo make opaque?
 
 
 type alias Size =
@@ -32,6 +28,12 @@ type alias ToyUniforms =
 
 type alias ToyFragmentShader =
     Shader {} ToyUniforms { vFragCoord : Vec2 }
+
+
+type alias ToyFragment =
+    { name : String
+    , shader : ToyFragmentShader
+    }
 
 
 toyMesh : Mesh Vertex
@@ -62,8 +64,8 @@ toyVertexShader =
     |]
 
 
-viewToyShader : Model -> Size -> ToyFragmentShader -> Html Msg
-viewToyShader model size toyFragmentShader =
+viewToyShader : Model -> Size -> ToyFragment -> Html Msg
+viewToyShader model size toyFragment =
     WebGL.toHtml
         [ width size.width
         , height size.height
@@ -71,7 +73,7 @@ viewToyShader model size toyFragmentShader =
         ]
         [ WebGL.entity
             toyVertexShader
-            toyFragmentShader
+            toyFragment.shader
             toyMesh
             { iResolution = vec3 (toFloat size.width) (toFloat size.height) 0
             , iGlobalTime = model.time / 1000
@@ -79,16 +81,19 @@ viewToyShader model size toyFragmentShader =
         ]
 
 
-viewToyShaderCard : Model -> Size -> ToyFragmentShader -> Html Msg
-viewToyShaderCard model size toyFragmentShader =
-    div
-        [ style "border-radius" "10px"
-        , style "overflow" "hidden"
-        , style "margin" "10px"
+viewToyShaderCard : Model -> Size -> ToyFragment -> Html Msg
+viewToyShaderCard model size toyFragment =
+    div []
+        [ div [ style "text-align" "center" ] [ text toyFragment.name ]
+        , div
+            [ style "border-radius" "10px"
+            , style "overflow" "hidden"
+            , style "margin" "10px"
+            ]
+            [ viewToyShader model size toyFragment ]
         ]
-        [ viewToyShader model size toyFragmentShader ]
 
 
-viewToyShaderCardPreview : Model -> ToyFragmentShader -> Html Msg
+viewToyShaderCardPreview : Model -> ToyFragment -> Html Msg
 viewToyShaderCardPreview model toyFragmentShader =
     viewToyShaderCard model (Size 300 300) toyFragmentShader

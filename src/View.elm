@@ -14,10 +14,7 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "Shaders Explore"
     , body =
-        [ div []
-            [ text "time: "
-            , text (String.fromFloat (model.time / 1000))
-            ]
+        [ h1 [] [ text "Shaders Explore" ]
         , div [ style "display" "flex" ]
             [ viewToyShaderCardPreview model ToyFragments.helloWorld
             , viewToyShaderCardPreview model ToyFragments.circle
