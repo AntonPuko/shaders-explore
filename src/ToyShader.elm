@@ -1,4 +1,4 @@
-module ToyShader exposing (Size, ToyFragmentShader, ToyUniforms, viewToyShaderCard)
+module ToyShader exposing (Size, ToyFragmentShader, ToyUniforms, viewToyShaderCardPreview)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -62,15 +62,6 @@ toyVertexShader =
     |]
 
 
-viewToyShaderCard : Model -> Size -> ToyFragmentShader -> Html Msg
-viewToyShaderCard model size toyFragmentShader =
-    div
-        [ style "border-radius" "10px"
-        , style "overflow" "hidden"
-        ]
-        [ viewToyShader model size toyFragmentShader ]
-
-
 viewToyShader : Model -> Size -> ToyFragmentShader -> Html Msg
 viewToyShader model size toyFragmentShader =
     WebGL.toHtml
@@ -86,3 +77,18 @@ viewToyShader model size toyFragmentShader =
             , iGlobalTime = model.time / 1000
             }
         ]
+
+
+viewToyShaderCard : Model -> Size -> ToyFragmentShader -> Html Msg
+viewToyShaderCard model size toyFragmentShader =
+    div
+        [ style "border-radius" "10px"
+        , style "overflow" "hidden"
+        , style "margin" "10px"
+        ]
+        [ viewToyShader model size toyFragmentShader ]
+
+
+viewToyShaderCardPreview : Model -> ToyFragmentShader -> Html Msg
+viewToyShaderCardPreview model toyFragmentShader =
+    viewToyShaderCard model (Size 300 300) toyFragmentShader
